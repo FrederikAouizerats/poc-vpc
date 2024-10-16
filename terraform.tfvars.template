@@ -1,0 +1,13 @@
+ibmcloud_api_key = "zbd0uoWtHJLrB0HD7Xj5ZHVezfNfAAge5-dmvwU8oZ7I"
+region = "eu-es"
+resources_group = "rg-poc1"
+name_vpc = "vpc-poc-es"
+security_group = "sg-vpc-poc-es"
+security_group-inbound_rule = "inbound_rule"
+security_group-egress_rule = "egress_rule"
+zone_number = "2"
+ip_block = ["192.168.22.0/24","192.168.0.0/24"]
+user-sshpubkeyname = "userpubsshkeyname"
+user-public-key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC6IUtP8NOuHq18PYCil+bMaNCIu+Pkqc9uPgHVGj14TIN1FrVNUEOgazvLwK/3mKw3YPbdii8CXFcybSIVrvorPJyKrtEWoDo6pUGCWaC7/8EshzifpZ+y0Ds5qpnlJZwpzbju1GWS3kbSSmEcfczJl0LvMpNVGQugF8oVyju5eHiF/DEWCAvFsEX66KGa7iBsy7ggFptwW+Y0fqFVU6ROYWiwGr0bHMaYogrUKUMY7Yg3eWB7xuMRItwnKvmV6UpR+5tX6pNvjMKcXbBg65ExoegjcJCPndkBINC67KZo5aaigRcTDj/DI9K4ZrEoBeikDTKeU/1hxVSkeEv7XarVrGvGFFz9hs1ofOMm/JR04bMcoLn+JjpiCJQPX7eDnqx7ZGoh+PwNMC/kAIX9lZpIjXa839fVD9ar0xrwKo2zhODKjaKHTAjGjU2aIGzwGupFPOUNqr/39x6otO5XTfXk/KThTzgPi+PJ2qHVOoYNyRTf7cQlFFMlg4/F/qmxsJU= frederikaouizerats@Frederiks-MBP"
+image-instance = "imageinstance"
+vsi-instance = "vsiinstance"
