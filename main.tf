@@ -59,6 +59,14 @@ resource "ibm_is_vpc_address_prefix" "ip_prefix2" {
   cidr = var.ip_block[1]
 }
 
+# create the ip prefix 3 and block associated with each zone
+resource "ibm_is_vpc_address_prefix" "ip_prefix3" {
+  name = "address-prefix-3"
+  zone = "${var.region}-${var.zone_number}"
+  vpc  = ibm_is_vpc.vpc.id
+  cidr = var.ip_block[2]
+}
+
 # create subnet 1 into the VPC, for each zone
 resource "ibm_is_subnet" "subnet1" {
   depends_on = [
@@ -81,6 +89,16 @@ resource "ibm_is_subnet" "subnet2" {
   ipv4_cidr_block           = var.ip_block[1]
 }
 
+# create subnet 3 into the VPC, for each zone
+resource "ibm_is_subnet" "subnet3" {
+  depends_on = [
+    ibm_is_vpc_address_prefix.ip_prefix3
+  ]
+  name                      = "subnet-3"
+  vpc                       = ibm_is_vpc.vpc.id
+  zone                      = "${var.region}-${var.zone_number}"
+  ipv4_cidr_block           = var.ip_block[2]
+}
 
 resource "ibm_is_ssh_key" "sshpubkey" {
   name       = var.user-sshpubkeyname
