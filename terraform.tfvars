@@ -1,4 +1,4 @@
-ibmcloud_api_key = "zbd0uoWtHJLrB0HD7Xj5ZHVezfNfAAge5-dmvwU8oZ7I"
+ibmcloud_api_key = "xyz"
 region = "eu-es"
 resources_group = "rg-poc-2"
 name_vpc = "vpc-poc-es"
