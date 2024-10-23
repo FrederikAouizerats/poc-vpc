@@ -42,6 +42,43 @@ resource "ibm_is_security_group_rule" "ibm_is_security_group_rule-inbound-https"
    }
 }
 
+# Create a second Security Group Rule inbound for ssh
+resource "ibm_is_security_group_rule" "ibm_is_security_group_rule-inbound-ssh" {
+  group     = ibm_is_security_group.security_group_inst.id
+  direction = "inbound"
+  #remote = "any"
+  #remote    = "0.0.0.0/0"
+  tcp {
+     port_min = 22
+     port_max = 22
+   }
+}
+
+# Create a second Security Group Rule inbound for all tcp
+resource "ibm_is_security_group_rule" "ibm_is_security_group_rule-inbound-alltcp" {
+  group     = ibm_is_security_group.security_group_inst.id
+  direction = "outbound"
+  #remote = "any"
+  #remote    = "0.0.0.0/0"
+  tcp {
+     port_min = 1
+     port_max = 65535
+   }
+}
+
+# Create a second Security Group Rule inbound for all udp
+resource "ibm_is_security_group_rule" "ibm_is_security_group_rule-inbound-alludp" {
+  group     = ibm_is_security_group.security_group_inst.id
+  direction = "outbound"
+  #remote = "any"
+  #remote    = "0.0.0.0/0"
+  udp {
+     port_min = 1
+     port_max = 65535
+   }
+}
+
+
 
 # create the ip prefix 1 and block associated with each zone
 resource "ibm_is_vpc_address_prefix" "ip_prefix1" {
