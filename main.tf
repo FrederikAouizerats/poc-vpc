@@ -12,36 +12,36 @@ resource "ibm_is_vpc" "vpc" {
 }
 
 # Create a Security Group
- resource "ibm_is_security_group" "ocpbmesxi-securitygroup" {
+ resource "ibm_is_security_group" "security_group_inst" {
    name = var.security_group
    vpc  = ibm_is_vpc.vpc.id
    resource_group = ibm_resource_group.rg.id
  }
 
-# Create a Security Group Rule inbound
-resource "ibm_is_security_group_rule" "ocpbmesxi-securitygroupruleinbound" {
-  group     = ibm_is_security_group.ocpbmesxi-securitygroup.id
-  #group  = ibm_is_vpc.vpc.default_security_group
+# Create a first Security Group Rule inbound for http
+resource "ibm_is_security_group_rule" "ibm_is_security_group_rule-inbound-http" {
+  group     = ibm_is_security_group.security_group_inst.id
   direction = "inbound"
   #remote = "any"
   #remote    = "0.0.0.0/0"
-  # all {
-  #   port_min = 1
-  #   port_max = 65535
-  # }
+  tcp {
+     port_min = 80
+     port_max = 80
+   }
 }
 
-# Create a Security Group Rule outbound
-resource "ibm_is_security_group_rule" "ocpbmesxi-securitygroupruleoutbound" {
-  group     = ibm_is_security_group.ocpbmesxi-securitygroup.id
-  #group  = ibm_is_vpc.vpc.default_security_group
-  direction = "outbound"
-  remote    = "0.0.0.0/0"
-#   tcp {
-#     port_min = 1
-#     port_max = 65535
-#   }
- }
+# Create a second Security Group Rule inbound for https
+resource "ibm_is_security_group_rule" "ibm_is_security_group_rule-inbound-https" {
+  group     = ibm_is_security_group.security_group_inst.id
+  direction = "inbound"
+  #remote = "any"
+  #remote    = "0.0.0.0/0"
+  tcp {
+     port_min = 443
+     port_max = 443
+   }
+}
+
 
 # create the ip prefix 1 and block associated with each zone
 resource "ibm_is_vpc_address_prefix" "ip_prefix1" {
@@ -105,3 +105,36 @@ resource "ibm_is_ssh_key" "sshpubkey" {
   public_key = var.user-public-key
   resource_group = ibm_resource_group.rg.id
 }
+
+resource "ibm_is_floating_ip" "fip1" {
+   name   = "ha-proxi-external-fip1"
+   zone    = "eu-es-2"
+     }
+
+resource "ibm_is_instance" "ha-proxi-external-mad2-inst" {
+  name    = "ha-proxi-external-mad2"
+  image   = "r050-19e869f7-3d76-4fd4-8f71-91595a7b44a8"
+  profile = "bx2-2x8"
+  #metadata_service_enabled  = false
+  primary_network_interface {
+    name = "ha-proxi-external-mad2-sn1"
+    subnet = ibm_is_subnet.subnet1.id
+    #primary_ip{
+    #  address = "192.168.22.240"
+    #}
+    security_groups = [ ibm_is_security_group.security_group_inst.id ]
+    allow_ip_spoofing = false
+    # primary_ipv4_address = "192.168.22.240"  // will be deprecated. Use primary_ip.[0].address
+  }
+  vpc  = ibm_is_vpc.vpc.id
+  zone = "${var.region}-${var.zone_number}"
+  keys = [ibm_is_ssh_key.sshpubkey.id]
+  resource_group = ibm_resource_group.rg.id
+}
+
+resource "ibm_is_instance_network_interface_floating_ip" "ha-proxi-external-mad2-inst-float" {
+  instance          = ibm_is_instance.ha-proxi-external-mad2-inst.id
+  network_interface = ibm_is_instance.ha-proxi-external-mad2-inst.primary_network_interface[0].id
+  floating_ip       = ibm_is_floating_ip.fip1.id
+  }
+  
